@@ -10,7 +10,7 @@ pipeline {
         stage('Checkout Code') {
             steps {
                 // Checkout code from Git
-                git branch: 'main', url: '<your-git-repo-url>'
+                git branch: 'main', url: 'https://github.com/gogulanikhil/nodejs_repo_1'
             }
         }
 
