@@ -1,0 +1,57 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_REPO = "nikhil0513"
+        AWS_REGION = "eu-north-1"
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                // Checkout code from Git
+                git branch: 'main', url: '<your-git-repo-url>'
+            }
+        }
+
+        stage('Build and Push Docker Image') {
+            steps {
+                script {
+                    sh 'docker build -t ${DOCKER_REPO}/my-app:latest .'
+                    sh 'aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${DOCKER_REPO}'
+                    sh 'docker push ${DOCKER_REPO}/my-app:latest'
+                }
+            }
+        }
+
+        stage('Apply Terraform') {
+            steps {
+                script {
+                    dir('terraform') {
+                        sh 'terraform init'
+                        sh 'terraform apply -auto-approve'
+                    }
+                }
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    dir('helm-chart') {
+                        sh 'helm upgrade --install my-app .'
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Deployment completed successfully!'
+        }
+        failure {
+            echo 'Deployment failed.'
+        }
+    }
+}
