@@ -18,7 +18,7 @@ pipeline {
             steps {
                 script {
                     sh 'docker build -t ${DOCKER_REPO}/my-app:latest .'
-                    sh 'docker login --username nikhil0513 --password-stdin ${DOCKER_REPO}'
+                    sh 'docker login --username nikhil0513 --password-stdin dckr_pat_mSHEoNUerBTWQpXYAWZ08MuCtTU'
                     sh 'docker push ${DOCKER_REPO}/my-app:latest'
                 }
             }
