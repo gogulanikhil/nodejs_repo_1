@@ -22,7 +22,6 @@ pipeline {
                 script {
                     // Build the Docker image
                     sh 'docker build -t ${DOCKER_REPO}/my-app:latest .'
-<<<<<<< HEAD
                 }
             }
         }
@@ -40,9 +39,6 @@ pipeline {
             steps {
                 script {
                     // Push the image to Docker Hub
-=======
-                    sh 'docker login --username nikhil0513 --password-stdin dckr_pat_mSHEoNUerBTWQpXYAWZ08MuCtTU'
->>>>>>> 414b71a1213014f7dfe389c29f68fc437b5d30ad
                     sh 'docker push ${DOCKER_REPO}/my-app:latest'
                 }
             }
