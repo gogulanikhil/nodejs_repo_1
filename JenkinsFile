@@ -4,6 +4,10 @@ pipeline {
     environment {
         DOCKER_REPO = "nikhil0513"
         AWS_REGION = "eu-north-1"
+        export DOCKER_REPO=nikhil0513
+        export DOCKER_PAT=dckr_pat_mSHEoNUerBTWQpXYAWZ08MuCtTU
+
+        
     }
 
     stages {
@@ -13,16 +17,46 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/gogulanikhil/nodejs_repo_1'
             }
         }
-
-        stage('Build and Push Docker Image') {
+        stage('Build Docker Image') {
             steps {
                 script {
+                    // Build the Docker image
                     sh 'docker build -t ${DOCKER_REPO}/my-app:latest .'
+<<<<<<< HEAD
+                }
+            }
+        }
+
+        stage('Docker Login') {
+            steps {
+                script {
+                    // Login to Docker Hub
+                    sh 'echo ${DOCKER_PAT} | docker login --username ${DOCKER_REPO} --password-stdin'
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    // Push the image to Docker Hub
+=======
                     sh 'docker login --username nikhil0513 --password-stdin dckr_pat_mSHEoNUerBTWQpXYAWZ08MuCtTU'
+>>>>>>> 414b71a1213014f7dfe389c29f68fc437b5d30ad
                     sh 'docker push ${DOCKER_REPO}/my-app:latest'
                 }
             }
         }
+    }
+        // stage('Build and Push Docker Image') {
+        //     steps {
+        //         script {
+        //             sh 'docker build -t ${DOCKER_REPO}/my-app:latest .'
+        //             sh 'docker login --username nikhil0513 --password-stdin dckr_pat_mSHEoNUerBTWQpXYAWZ08MuCtTU'
+        //             sh 'docker push ${DOCKER_REPO}/my-app:latest'
+        //         }
+        //     }
+        // }
 
         stage('Apply Terraform') {
             steps {
