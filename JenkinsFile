@@ -2,12 +2,9 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_REPO = "nikhil0513"
-        AWS_REGION = "eu-north-1"
-        export DOCKER_REPO=nikhil0513
-        export DOCKER_PAT=dckr_pat_mSHEoNUerBTWQpXYAWZ08MuCtTU
-
-        
+        DOCKER_REPO = 'nikhil0513'
+        DOCKER_PAT = credentials('my-docker-sec') // Use Jenkins credentials ID for security
+        AWS_REGION = 'eu-north-1'
     }
 
     stages {
@@ -17,6 +14,7 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/gogulanikhil/nodejs_repo_1'
             }
         }
+
         stage('Build Docker Image') {
             steps {
                 script {
@@ -43,16 +41,6 @@ pipeline {
                 }
             }
         }
-    }
-        // stage('Build and Push Docker Image') {
-        //     steps {
-        //         script {
-        //             sh 'docker build -t ${DOCKER_REPO}/my-app:latest .'
-        //             sh 'docker login --username nikhil0513 --password-stdin dckr_pat_mSHEoNUerBTWQpXYAWZ08MuCtTU'
-        //             sh 'docker push ${DOCKER_REPO}/my-app:latest'
-        //         }
-        //     }
-        // }
 
         stage('Apply Terraform') {
             steps {
@@ -81,6 +69,7 @@ pipeline {
             echo 'Deployment completed successfully!'
         }
         failure {
-            echo 'Deployment failed.'
+            echo 'Deployment failed. Check logs for more details.'
         }
     }
+}
